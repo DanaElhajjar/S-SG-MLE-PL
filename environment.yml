@@ -1,0 +1,17 @@
+name: s-g-mle-pl
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - matplotlib
+  - plotly
+  - seaborn
+  - pandas
+  - tqdm
+  - numpy
+  - scipy
+  - scikit-learn
+  - pip
+  - ipython
+  - pip:
+    - pyyaml

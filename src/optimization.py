@@ -4,15 +4,17 @@
 import numpy as np
 import warnings
 
-from Utility import add_one_obs
-from Estimation import (phasecorrection3,
-                            phasecorrection4)
+from .utility import add_one_obs, ToeplitzMatrix
+from .estimation import (
+    phasecorrection3,
+    phasecorrection4,
+    SCM)
 
 # --------------------------------------------------------------------------------------------------
 # Functions
 # --------------------------------------------------------------------------------------------------
 
-def Scaled_Gaussian_complex_theta_recursif(X, X_past, x_newdata, C, diag_w_past, iter_PL, iter_max_BCD, phasecorrectionchoice, tol = 0.001):
+def S_SG_MLE_PL_BCD(X, X_past, x_newdata, C, diag_w_past, iter_max_BCD, phasecorrectionchoice, tol = 0.001):
     # initialization
     stop_cond = np.inf
     iteration = 0
@@ -42,13 +44,11 @@ def Scaled_Gaussian_complex_theta_recursif(X, X_past, x_newdata, C, diag_w_past,
         temp14 = variance_newdata - new_past_coherence@diag_w_past.conj().T@inv_C@diag_w_past@new_past_coherence.T
         temp15 = np.diagonal(X_past.conj().T@inv_C@X_past)
         tau_est = temp13 / ((p+1) * temp14) + temp15 / (p+1) 
-        # X_past_bis = X_past / np.sqrt(tau_est) # Update X_past 
-        # x_newdata_reshaped_bis = x_newdata_reshaped / np.sqrt(tau_est) # Update x_newdata
-        X_bis = X / np.sqrt(tau_est) # Update X
+        # Update X
+        X_bis = X / np.sqrt(tau_est) 
         SCM_bis = SCM(X_bis)
         X_past_bis = X_bis[0:p, :]
-        # x_newdata_reshaped_bis = X_bis[p, :]
-        x_newdata_reshaped_bis = x_newdata_reshaped / np.sqrt(tau_est) # Update x_newdata
+        x_newdata_reshaped_bis = x_newdata_reshaped / np.sqrt(tau_est) 
 
         # Bloc 2 : Computation of the coherence between the past images and the new one
         temp21 = x_newdata_reshaped_bis@X_past_bis.conj().T@inv_C.conj().T@diag_w_past
