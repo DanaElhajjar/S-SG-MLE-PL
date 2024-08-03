@@ -51,8 +51,7 @@ unzip data.zip data/
 | Command                             | Figure | Parameters                       |
 |-------------------------------------|--------|----------------------------------|
 | `python mse_simulation [OPTIONS]`   |   2    | n, l, rho, number of trials      |
-| `python computation_time [OPTIONS]` |   3    | n, p_list, rho, number of trials |
-| `python real data [OPTIONS]`        |   4    | n, l                             |
+| `python real data [OPTIONS]`        |   3    | n, l                             |
 
 ### Authors
 
