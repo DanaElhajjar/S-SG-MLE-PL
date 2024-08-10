@@ -25,7 +25,7 @@ If you use any of the code or data provided here, please cite the above paper.
     └── utility.py<br>
 
 
-The main code for the methods is provided in src/ directory. The file optimization.py provides the function for the S-G-MLE-PL algorithm. The folder exp/ provides the simulations and the folder rd/ contains the processing on the real data. The data/ directory is used to store the dataset used. 
+The main code for the methods is provided in src/ directory. The file optimization.py provides the function for the S-SG-MLE-PL algorithm. The folder exp/ provides the simulations and the folder real_data/ contains the processing on the real data. The data/ directory is used to store the dataset used. 
 
 
 ## Environment
