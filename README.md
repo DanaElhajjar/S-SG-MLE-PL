@@ -34,7 +34,7 @@ A conda environment is provided in the file `environment.yml` To create and use 
 
 ```console
 conda env create -f environment.yml
-conda activate s-g-mle-pl
+conda activate s-sg-mle-pl
 ```
 
 ## Dataset
