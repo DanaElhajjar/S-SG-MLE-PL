@@ -46,13 +46,6 @@ wget https://zenodo.org/records/11283419/files/Sentinel1_timeseries_mexico_inter
 unzip data.zip data/
 ```
 
-### Reproducing the results of the paper
-
-| Command                             | Figure | Parameters                       |
-|-------------------------------------|--------|----------------------------------|
-| `python mse_simulation [OPTIONS]`   |   2    | n, l, rho, number of trials      |
-| `python real data [OPTIONS]`        |   3    | n, l                             |
-
 ### Authors
 
 * Dana El Hajjar, mail: dana.el-hajjar@univ-smb.fr
