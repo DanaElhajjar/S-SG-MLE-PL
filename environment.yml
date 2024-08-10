@@ -1,4 +1,4 @@
-name: s-g-mle-pl
+name: s-sg-mle-pl
 channels:
   - conda-forge
 dependencies:
