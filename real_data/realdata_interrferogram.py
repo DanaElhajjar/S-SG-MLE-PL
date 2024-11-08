@@ -13,14 +13,6 @@ if __name__ == "__main__":
                         type=int, 
                         default=20,
                         help="Number of time stamps in the time series")
-    parser.add_argument("--rho", 
-                        type=float, 
-                        default=0.7, 
-                        help="Correlation coefficient for Toeplitz coherence matrix")
-    parser.add_argument("--n_list", 
-                        type=str, 
-                        default=", ".join([str(x) for x in range(20, 400, 20)]),
-                        help="List of the size of patch to use")
     parser.add_argument("--n_trials", 
                         type=int, 
                         default=1000, 
@@ -33,17 +25,9 @@ if __name__ == "__main__":
                         type=float, 
                         default=0.001, 
                         help="Treshold for stopping the BCD algorithm")
-    parser.add_argument("--sampledist", 
-                        type=str, 
-                        default=["ScaledGaussian", 0.1], 
-                        help="The sample distribution")
-    parser.add_argument("--nu",
-                        type=int,
-                        default=0.1,
-                        help="Scaled Gaussian distribution parameter")
     parser.add_argument("--model", 
                         type=str, 
-                        default="Gaussian", 
+                        default="ScaledGaussian", 
                         help="The model")
     parser.add_argument("--p", 
                         type=int, 
@@ -73,25 +57,22 @@ if __name__ == "__main__":
                         type=int, 
                         default=-1, 
                         help="The number of threads")
-    parser.add_argument("--maxphase", 
-                        type=int, 
-                        default=2, 
-                        help="The maximum value of the phase")
-    parser.add_argument("--phasechoice", 
-                        type=str, 
-                        default=["linear", "2"], 
-                        help="Choice of phase: 'linear', maxphase or 'random'")
     parser.add_argument("--window_size",
                         type=int,
                         default=8,
                         help="The size of the window")
     args = parser.parse_args()
 
-    # Parse n values for str
-    args.n_list = [int(x) for x in args.n_list.split(",")]
-    args.phasechoice = [int(x) for x in args.phasechoice.split(",")]
+    # Safely parse known arguments and ignore unknown arguments passed by Jupyter
+    args, unknown = parser.parse_known_args()
 
-    print("MSE over size of patch simulation with parameters:")
+    # Convert `n_list` to a list of integers
+    args.n_list = [int(x) for x in args.n_list.split(",")]
+
+    # add `argsMLEPL`
+    args.argsMLEPL = [args.iter_PL, args.iter_max_BCD, args.iter_max_MM, args.phasecorrectionchoice]
+
+    print("Phase difference on real datawith parameters:")
     for key, val in vars(args).items():
         print(f"  * {key}: {val}")
 
@@ -102,18 +83,7 @@ if __name__ == "__main__":
 
     # interferogram size : (4188, 23887)
 
-    window_size = 8 
-    n = window_size**2
-    num_processes = 5
-    iter_PL = 50 
-    iter_max_PL = 200
-    iter_max_BCD = 30
-    iter_max_MM =  50
-    phasecorrectionchoice = 3
-    tol = 0.001
-    argsMLEPL = (iter_PL, iter_max_BCD, iter_max_MM, phasecorrectionchoice)
-
-    output = process_images(DataFolder, window_size, num_processes, n, argsMLEPL, tol)
+    output = process_images(DataFolder, args.window_size, args.n_threads, args.n, args.argsMLEPL, args.tol)
 
     phases_list = []
     C_tilde_list = []

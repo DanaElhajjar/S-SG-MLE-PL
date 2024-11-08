@@ -54,10 +54,11 @@ def sampledistributionchoice(trueC,p, N,sampledist):
         _,X = simulateMVscaledG(trueC,sampledist[1],p, N) #simulate non-Gaussian distribution
         return X
     
-def phasegeneration(choice,p):
+def phasegeneration(choice,maxphase, p):
     """ A function that generate phase differences
     Inputs : 
         * choice : random or linear
+        * maxphase : integer
         * N : integer
     Outputs : 
         * delta_thetasim : vector of phase differences """
@@ -65,9 +66,8 @@ def phasegeneration(choice,p):
         theta_sim = np.array([random.uniform(-np.pi,np.pi) for i in range(p)])
         delta_thetasim0 = np.array((theta_sim-theta_sim[0]))
         delta_thetasim = np.angle(np.exp(1j*delta_thetasim0))
-    elif choice[0]  == 'linear':
-        thetastep = choice[1]
-        delta_thetasim = np.linspace(0,thetastep,p)
+    elif choice  == 'linear':
+        delta_thetasim = np.linspace(0,maxphase,p)
     return delta_thetasim
 
 def simulateCov(trueSigma, truetheta):

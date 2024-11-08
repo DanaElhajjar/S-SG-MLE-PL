@@ -44,7 +44,7 @@ def tyler_estimator_covariance(X, tol=0.001, iter_max=100):
     while (stop_cond>tol) and (iteration<iter_max):
         
         # Computing expression of Tyler estimator (with matrix multiplication)
-        τ_est = np.diagonal(X.conj().T@inv(Sigma)@X)
+        τ_est = np.diagonal(X.conj().T@np.linalg.inv(Sigma)@X)
         X_bis = X / np.sqrt(τ_est)
         Sigma_new = (p/N) * X_bis@X_bis.conj().T
 

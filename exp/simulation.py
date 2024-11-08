@@ -1,8 +1,8 @@
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from src.estimation import extractMLEfunc, MLE_PL, SCM
-from src.optimization import S_G_MLE_PL_BCD
+from src.estimation import extractMLEfunc, MLE_PL, SCM, tyler_estimator_covariance
+from src.optimization import S_SG_MLE_PL_BCD
 from src.generation import sampledistributionchoice
 
 import numpy as np
@@ -30,41 +30,39 @@ def oneMonteCarlo(p, n, trueCov, sampledist, rank, argsMLEPL, number_of_trials, 
     delta2pinsar = np.zeros(p+1)
     (iter_PL, iter_max_BCD, iter_max_MM, phasecorrectionchoice) = argsMLEPL
     argsMLE = (iter_max_BCD, iter_max_MM, phasecorrectionchoice)
-
     X = sampledistributionchoice(trueCov, p+1, n, sampledist)
     X = np.asarray(X, dtype=np.complex128)
     X_past = X[0:p, :]
     x_newdata = X[p, :]
-    S = SCM(X)
-    C = SCM(X_past)
+    C, _ = tyler_estimator_covariance(X_past, 0.001, 100)
     C = np.asarray(C, dtype=np.complex128)
-    _, _, diag_w_past = MLE_PL(X_past, 
-                               'Gaussian', 
+    _, _, diag_w_past, _ = extractMLEfunc(X_past, 
+                               'ScaledGaussian',
                                'Cor-Arg', 
-                               rank, 
+                               p, 
                                argsMLE)
     # MLE-PL (offline)
-    _, new_deltaphase = extractMLEfunc(X, 
-                                       'Gaussian', 
+    _, new_deltaphase, _, _ = extractMLEfunc(X, 
+                                       'ScaledGaussian', 
                                        'Cor-Arg', 
                                        rank, 
                                        argsMLE)
     # classic PL (offline)
-    _, new_deltaphase_classic_PL = extractMLEfunc(X, 
-                                                  'Gaussian', 
+    _, new_deltaphase_classic_PL, _ , _= extractMLEfunc(X, 
+                                                  'ScaledGaussian', 
                                                   'Mod-Arg', 
                                                   rank, 
                                                   argsMLE)
 
     # S-G-MLE-PL
-    C_tilde_structured, new_phase_sequential = S_G_MLE_PL_BCD(X, 
+    C_tilde_structured, new_phase_sequential = S_SG_MLE_PL_BCD(X, 
                                                               X_past, 
                                                               x_newdata,
-                                                               C, 
-                                                               diag_w_past, 
-                                                               iter_max_BCD, 
-                                                               phasecorrectionchoice=4, 
-                                                                tol=0.001)
+                                                              C, 
+                                                              diag_w_past, 
+                                                              iter_max_BCD, 
+                                                              phasecorrectionchoice, 
+                                                              tol=0.001)
     # 2p-InSAR
     for kk in np.arange(1,p+1):
         delta2pinsar[kk] = (-np.angle(np.dot(X[0,:],np.transpose(np.conj(X[kk,:])))))
@@ -82,7 +80,7 @@ def parallel_Monte_Carlo(p, n, trueCov, sampledist, rank, argsMLEPL, number_of_t
         * p : number of data (images)
         * n : number of pixels
         * trueCov : the true covariance matrix
-        * sampledist : if Gaussian distribution => 'Gaussian', if Sca led Gaussian distribution => 'ScaledGaussian', nu (the parameter for the gamma distribution of tau)
+        * sampledist : if Gaussian distribution => 'Gaussian', if Scaled Gaussian distribution => 'ScaledGaussian', nu (the parameter for the gamma distribution of tau)
         * rank : integer that represents the rank of the structure of the covariance matrix
         * argsMLEPL : maximum number of iteration of BCD, MM and the phase correction choice (3 or 4)
         * number_of_trials : number of Monte Carlo simulations (will be used later)
