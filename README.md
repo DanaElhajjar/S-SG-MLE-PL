@@ -1,4 +1,4 @@
-# S-SG-MLE-PL
+# Robust Sequential Phase Linking based on Maximum Likelihood Estimation
 
 This repository is dedicated to the implementation of Robust Sequential Phase Linking based on Maximum Likelihood Estimation (S-MLE-PL). This approach aims to estimate the phase of a new SAR image based on a block of past images. 
 
