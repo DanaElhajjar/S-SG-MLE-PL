@@ -1,6 +1,6 @@
 # S-SG-MLE-PL
 
-This repository is dedicated to the implementation of Sequential Scaled Gaussian Phase Linking based on Maximum Likelihood Estimation (S-SG-MLE-PL). This approach aims to estimate the phase of a new SAR image based on a block of past images. 
+This repository is dedicated to the implementation of Robust Sequential Phase Linking based on Maximum Likelihood Estimation (S-SG-MLE-PL). This approach aims to estimate the phase of a new SAR image based on a block of past images. 
 
 The repository provides reproduction of the results presented in the paper:
 > Dana EL HAJJAR, Guillaume GINOLHAC, Yajing YAN, and Mohammed Nabil EL KORSO, "Robust sequential phase estimation using Multi-temporal SAR image series".
